@@ -6,6 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="eb56b8db63e54578ab45d52b43969132" Name="Diagram1" >
         <EntityTypeShape EntityType="ThesisModel.TestTable" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ThesisModel.RandomNumber" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

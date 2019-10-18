@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FrameworkApp.Entities
+namespace App.Entities
 {
     using System;
     using System.Data.Entity;
@@ -26,5 +26,6 @@ namespace FrameworkApp.Entities
         }
     
         public virtual DbSet<TestTable> TestTable { get; set; }
+        public virtual DbSet<RandomNumber> RandomNumber { get; set; }
     }
 }

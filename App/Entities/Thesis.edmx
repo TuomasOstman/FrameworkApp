@@ -5,6 +5,13 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ThesisModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="RandomNumber">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IntValue" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="TestTable">
           <Key>
             <PropertyRef Name="ID" />
@@ -13,6 +20,7 @@
           <Property Name="Data" Type="nvarchar(max)" />
         </EntityType>
         <EntityContainer Name="ThesisModelStoreContainer">
+          <EntitySet Name="RandomNumber" EntityType="Self.RandomNumber" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TestTable" EntityType="Self.TestTable" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -21,6 +29,7 @@
       <Schema Namespace="ThesisModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ThesisEntities" annotation:LazyLoadingEnabled="true" >
           <EntitySet Name="TestTable" EntityType="ThesisModel.TestTable" />
+          <EntitySet Name="RandomNumber" EntityType="ThesisModel.RandomNumber" />
         </EntityContainer>
         <EntityType Name="TestTable">
           <Key>
@@ -28,6 +37,13 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Data" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RandomNumber">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IntValue" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -39,6 +55,14 @@
             <EntityTypeMapping TypeName="ThesisModel.TestTable">
               <MappingFragment StoreEntitySet="TestTable">
                 <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RandomNumber">
+            <EntityTypeMapping TypeName="ThesisModel.RandomNumber">
+              <MappingFragment StoreEntitySet="RandomNumber">
+                <ScalarProperty Name="IntValue" ColumnName="IntValue" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

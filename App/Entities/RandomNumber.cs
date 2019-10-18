@@ -12,9 +12,9 @@ namespace App.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class TestTable
+    public partial class RandomNumber
     {
         public int ID { get; set; }
-        public string Data { get; set; }
+        public int IntValue { get; set; }
     }
 }

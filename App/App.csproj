@@ -60,6 +60,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\RandomNumber.cs">
+      <DependentUpon>Thesis.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\TestTable.cs">
       <DependentUpon>Thesis.tt</DependentUpon>
     </Compile>
