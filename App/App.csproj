@@ -60,7 +60,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAL\ADONetDAL.cs" />
+    <Compile Include="DAL\DapperDAL.cs" />
     <Compile Include="Entities\RandomNumber.cs">
+      <DependentUpon>Thesis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\RandomObject.cs">
+      <DependentUpon>Thesis.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Seed.cs">
       <DependentUpon>Thesis.tt</DependentUpon>
     </Compile>
     <Compile Include="Entities\TestTable.cs">
@@ -81,8 +89,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Thesis.edmx</DependentUpon>
     </Compile>
+    <Compile Include="DAL\EntityFrameworkDAL.cs" />
+    <Compile Include="Model\RandomObjectModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomGenerators\RandomDateTimeOffsetGenerator.cs" />
+    <Compile Include="RandomGenerators\RandomStringGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

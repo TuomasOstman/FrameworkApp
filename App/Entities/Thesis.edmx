@@ -12,6 +12,23 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IntValue" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="RandomObject">
+          <Key>
+            <PropertyRef Name="RandomObjectID" />
+          </Key>
+          <Property Name="RandomObjectID" Type="int" Nullable="false" />
+          <Property Name="RandomString" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="RandomDateTimeOffset" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="RandomSeedId" Type="int" Nullable="false" />
+          <Property Name="RandomInt" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Seed">
+          <Key>
+            <PropertyRef Name="SeedID" />
+          </Key>
+          <Property Name="SeedID" Type="int" Nullable="false" />
+          <Property Name="SeedValue" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="TestTable">
           <Key>
             <PropertyRef Name="ID" />
@@ -19,9 +36,27 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="Data" Type="nvarchar(max)" />
         </EntityType>
+        <Association Name="FK_RandomObject_Seed">
+          <End Role="Seed" Type="Self.Seed" Multiplicity="1" />
+          <End Role="RandomObject" Type="Self.RandomObject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Seed">
+              <PropertyRef Name="SeedID" />
+            </Principal>
+            <Dependent Role="RandomObject">
+              <PropertyRef Name="RandomSeedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="ThesisModelStoreContainer">
           <EntitySet Name="RandomNumber" EntityType="Self.RandomNumber" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RandomObject" EntityType="Self.RandomObject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Seed" EntityType="Self.Seed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TestTable" EntityType="Self.TestTable" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_RandomObject_Seed" Association="Self.FK_RandomObject_Seed">
+            <End Role="Seed" EntitySet="Seed" />
+            <End Role="RandomObject" EntitySet="RandomObject" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -30,7 +65,13 @@
         <EntityContainer Name="ThesisEntities" annotation:LazyLoadingEnabled="true" >
           <EntitySet Name="TestTable" EntityType="ThesisModel.TestTable" />
           <EntitySet Name="RandomNumber" EntityType="ThesisModel.RandomNumber" />
-        </EntityContainer>
+          <EntitySet Name="RandomObject" EntityType="ThesisModel.RandomObject" />
+          <EntitySet Name="Seed" EntityType="ThesisModel.Seed" />
+          <AssociationSet Name="FK_RandomObject_Seed" Association="ThesisModel.FK_RandomObject_Seed">
+            <End Role="Seed" EntitySet="Seed" />
+            <End Role="RandomObject" EntitySet="RandomObject" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="TestTable">
           <Key>
             <PropertyRef Name="ID" />
@@ -45,7 +86,38 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="IntValue" Type="Int32" Nullable="false" />
         </EntityType>
-      </Schema>
+        <EntityType Name="RandomObject">
+          <Key>
+            <PropertyRef Name="RandomObjectID" />
+          </Key>
+          <Property Name="RandomObjectID" Type="Int32" Nullable="false" />
+          <Property Name="RandomString" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RandomDateTimeOffset" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="RandomSeedId" Type="Int32" Nullable="false" />
+          <Property Name="RandomInt" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Seed" Relationship="ThesisModel.FK_RandomObject_Seed" FromRole="RandomObject" ToRole="Seed" />
+        </EntityType>
+        <EntityType Name="Seed">
+          <Key>
+            <PropertyRef Name="SeedID" />
+          </Key>
+          <Property Name="SeedID" Type="Int32" Nullable="false" />
+          <Property Name="SeedValue" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="RandomObject" Relationship="ThesisModel.FK_RandomObject_Seed" FromRole="Seed" ToRole="RandomObject" />
+        </EntityType>
+        <Association Name="FK_RandomObject_Seed">
+          <End Type="ThesisModel.Seed" Role="Seed" Multiplicity="1" />
+          <End Type="ThesisModel.RandomObject" Role="RandomObject" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Seed">
+              <PropertyRef Name="SeedID" />
+            </Principal>
+            <Dependent Role="RandomObject">
+              <PropertyRef Name="RandomSeedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -64,6 +136,25 @@
               <MappingFragment StoreEntitySet="RandomNumber">
                 <ScalarProperty Name="IntValue" ColumnName="IntValue" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RandomObject">
+            <EntityTypeMapping TypeName="ThesisModel.RandomObject">
+              <MappingFragment StoreEntitySet="RandomObject">
+                <ScalarProperty Name="RandomInt" ColumnName="RandomInt" />
+                <ScalarProperty Name="RandomSeedId" ColumnName="RandomSeedId" />
+                <ScalarProperty Name="RandomDateTimeOffset" ColumnName="RandomDateTimeOffset" />
+                <ScalarProperty Name="RandomString" ColumnName="RandomString" />
+                <ScalarProperty Name="RandomObjectID" ColumnName="RandomObjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Seed">
+            <EntityTypeMapping TypeName="ThesisModel.Seed">
+              <MappingFragment StoreEntitySet="Seed">
+                <ScalarProperty Name="SeedValue" ColumnName="SeedValue" />
+                <ScalarProperty Name="SeedID" ColumnName="SeedID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

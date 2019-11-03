@@ -12,9 +12,14 @@ namespace FrameworkApp.Entities
     using System;
     using System.Collections.Generic;
     
-    public partial class TestTable
+    public partial class RandomObject
     {
-        public int ID { get; set; }
-        public string Data { get; set; }
+        public int RandomObjectID { get; set; }
+        public string RandomString { get; set; }
+        public System.DateTimeOffset RandomDateTimeOffset { get; set; }
+        public int RandomSeedId { get; set; }
+        public int RandomInt { get; set; }
+    
+        public virtual Seed Seed { get; set; }
     }
 }

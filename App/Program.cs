@@ -1,36 +1,32 @@
-﻿using Dapper;
-using App.Entities;
-using System;
-using System.Data.SqlClient;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
 
-namespace App
+namespace FrameworkApp
 {
     class Program
     {
-        private static readonly string ConnectionString = @"data source=OSTMYLLY\SQLEXPRESS;initial catalog=Thesis;integrated security=True";
+        private static readonly int Rows = 100;
+        private static readonly int SeedId = 2;
 
         static void Main()
         {
-            // GLOBAL
-            var seed = 140894;
-            var rows = 10;
-            Console.WriteLine("Random seed is: " + seed + " and number of rows is: " + rows);
+            Console.WriteLine("SeedId is: " + SeedId + " and number of rows is: " + Rows);
 
-            // EF
-            var efsw = new Stopwatch();
+            // ADO.Net
 
-            Console.WriteLine("Entity Framework starts!\n");
+            var adosw = new Stopwatch();
+
+            Console.WriteLine("\n------------------------------------\n");
+            Console.WriteLine("ADO.Net starts!\n");
             Console.WriteLine("------------------------------------\n");
 
-            efsw.Start();
+            adosw.Start();
 
-            InsertDataEF(seed, rows);
-            GetDataEF();
-            DeleteDataEF();
+            ADONetDAL.InsertData(SeedId, Rows);
+            ADONetDAL.GetData();
+            ADONetDAL.DeleteData();
 
-            efsw.Stop();
+            adosw.Stop();
 
             // Dapper
 
@@ -42,27 +38,26 @@ namespace App
 
             dappersw.Start();
 
-            InsertDataDapper(seed, rows);
-            GetDataDapper();
-            DeleteDataDapper();
+            DapperDAL.InsertData(SeedId, Rows);
+            DapperDAL.GetData();
+            DapperDAL.DeleteData();
 
             dappersw.Stop();
 
-            // ADO.net
-
-            var adosw = new Stopwatch();
+            // EF
+            var efsw = new Stopwatch();
 
             Console.WriteLine("\n------------------------------------\n");
-            Console.WriteLine("ADO.Net starts!\n");
+            Console.WriteLine("Entity Framework starts!\n");
             Console.WriteLine("------------------------------------\n");
 
-            adosw.Start();
+            efsw.Start();
 
-            InsertDataADONet(seed, rows);
-            GetDataADONet();
-            DeleteDataADONet();
+            EntityFrameworkDAL.InsertData(SeedId, Rows);
+            EntityFrameworkDAL.GetData();
+            EntityFrameworkDAL.DeleteData();
 
-            adosw.Stop();
+            efsw.Stop();
 
             Console.WriteLine("------------------------------------\n");
             Console.WriteLine("Entity Framework time: " + efsw.Elapsed);
@@ -72,374 +67,5 @@ namespace App
             Console.WriteLine("Press any key to close this window.");
             Console.ReadKey();
         }
-
-        #region EntityFramework
-
-        /// <summary>
-        /// Inserts data with EntityFramework
-        /// </summary>
-        /// <param name="seed">Randomnumber generators seed</param>
-        static void InsertDataEF(int seed, int rows)
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Inserting data!");
-
-                sw.Start();
-
-                var gen = new Random(seed);
-                var i = 0;
-                var result = false;
-
-                using (var db = new ThesisEntities())
-                {
-                    while (i < rows)
-                    {
-                        var row = new RandomNumber() { IntValue = gen.Next() };
-
-                        db.RandomNumber.Add(row);
-
-                        i++;
-                    }
-
-                    db.SaveChanges();
-
-                    result = true;
-
-                    sw.Stop();
-                }
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-
-        /// <summary>
-        /// Gets data from database with EntityFramework
-        /// </summary>
-        /// <returns></returns>
-        static void GetDataEF()
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Fetching data!");
-
-                sw.Start();
-
-                var result = 0;
-
-                using (var db = new ThesisEntities())
-                {
-                    result = (from rn in db.RandomNumber
-                                   orderby rn.IntValue descending
-                                   select rn.IntValue).FirstOrDefault();
-                }
-
-                sw.Stop();
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-        
-        /// <summary>
-        /// Truncates table
-        /// </summary>
-        /// <returns></returns>
-        static void DeleteDataEF()
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Truncating table!");
-
-                sw.Start();
-
-                var result = 0;
-
-                using (var db = new ThesisEntities())
-                {
-                    db.Database.ExecuteSqlCommand("TRUNCATE TABLE RandomNumber");
-                }
-
-                sw.Stop();
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-
-        #endregion
-
-        #region Dapper
-
-        /// <summary>
-        /// Insert data to table with Dapper
-        /// </summary>
-        /// <param name="seed">Randomnumber generators seed</param>
-        private static void InsertDataDapper(int seed, int rows)
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Inserting data!");
-
-                sw.Start();
-
-                var gen = new Random(seed);
-                var i = 0;
-                var result = false;
-
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    while (i < rows)
-                    {
-                        conn.Execute("INSERT INTO RandomNumber(IntValue) Values(@val)", new { val = gen.Next() });
-
-                        i++;
-                    }
-
-                    result = true;
-
-                    sw.Stop();
-                }
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-
-        /// <summary>
-        /// Gets data from database with Dapper
-        /// </summary>
-        /// <returns>Data string</returns>
-        static void GetDataDapper()
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Fetching data!");
-
-                sw.Start();
-
-                var result = 0;
-
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    result = conn.Query<int>("SELECT TOP(1) IntValue FROM RandomNumber ORDER BY IntValue DESC").FirstOrDefault();
-                }
-
-                sw.Stop();
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-
-        /// <summary>
-        /// Gets data from database with Dapper
-        /// </summary>
-        /// <returns>Data string</returns>
-        static void DeleteDataDapper()
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Truncating table!");
-
-                sw.Start();
-
-                var result = 0;
-
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    result = conn.Execute("TRUNCATE TABLE RandomNumber");
-                }
-
-                sw.Stop();
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-        #endregion
-
-        #region ADO.Net
-
-        /// <summary>
-        /// Insert data to table with ADO.Net
-        /// </summary>
-        /// <param name="seed">Randomnumber generators seed</param>
-        private static void InsertDataADONet(int seed, int rows)
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Inserting data!");
-
-                sw.Start();
-
-                var gen = new Random(seed);
-                var i = 0;
-                var result = false;
-
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    while (i < rows)
-                    {
-                        using (SqlCommand cmd = new SqlCommand("INSERT INTO RandomNumber(IntValue) Values(" + gen.Next() + ")", conn))
-                        {
-                            cmd.ExecuteNonQuery();
-                            i++;
-                        }
-                    }
-
-                    result = true;
-
-                    sw.Stop();
-                }
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-
-        /// <summary>
-        /// Gets data from database with ADO.Net
-        /// </summary>
-        static void GetDataADONet()
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Fetching data!");
-
-                sw.Start();
-
-                var result = 0;
-
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP(1) IntValue FROM RandomNumber ORDER BY IntValue DESC", conn))
-                    {
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.Read())
-                        {
-                            result = (int)reader["IntValue"];
-                        }
-                    }
-                }
-
-                sw.Stop();
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-
-        /// <summary>
-        /// Insert data to table with ADO.Net
-        /// </summary>
-        /// <param name="seed">Randomnumber generators seed</param>
-        private static void DeleteDataADONet()
-        {
-            try
-            {
-                var sw = new Stopwatch();
-
-                Console.WriteLine("--Truncating table!");
-
-                sw.Start();
-
-                var result = false;
-
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    conn.Open();
-
-                    using (SqlCommand cmd = new SqlCommand("TRUNCATE TABLE RandomNumber", conn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    result = true;
-
-                    sw.Stop();
-                }
-
-                Console.WriteLine("--Result was: " + result);
-                Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occured: " + ex);
-                Console.WriteLine("Press any key to continue.");
-                Console.ReadKey();
-            }
-        }
-        #endregion
     }
 }
