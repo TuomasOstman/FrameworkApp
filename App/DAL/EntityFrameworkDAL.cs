@@ -34,6 +34,8 @@ namespace FrameworkApp
                             where sd.SeedID == seedID
                             select sd.SeedValue).FirstOrDefault();
 
+                    Console.WriteLine("--Seed is : " + seed);
+
                     var gen = new Random(seed);
 
                     while (i < rows)

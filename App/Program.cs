@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 
 namespace FrameworkApp
 {
     class Program
     {
-        private static readonly int Rows = 100;
-        private static readonly int SeedId = 2;
+        private static readonly int Rows = Convert.ToInt32(ConfigurationManager.AppSettings.Get("Rows"));
+        private static readonly int SeedId = Convert.ToInt32(ConfigurationManager.AppSettings.Get("Seed"));
+        private static readonly int Repeats = Convert.ToInt32(ConfigurationManager.AppSettings.Get("Repeats"));
 
-        static void Main()
+        static void Main(string[] args)
         {
-            Console.WriteLine("SeedId is: " + SeedId + " and number of rows is: " + Rows);
+            Console.WriteLine("SeedId is: " + SeedId + ", number of rows is: " + Rows + " and Repeat count is: " + Repeats);
 
             // ADO.Net
 
@@ -22,9 +24,12 @@ namespace FrameworkApp
 
             adosw.Start();
 
-            ADONetDAL.InsertData(SeedId, Rows);
-            ADONetDAL.GetData();
-            ADONetDAL.DeleteData();
+            for (int i = 0; i < Repeats; i++)
+            {
+                ADONetDAL.InsertData(SeedId, Rows);
+                ADONetDAL.GetData();
+                ADONetDAL.DeleteData();
+            }
 
             adosw.Stop();
 
@@ -38,9 +43,12 @@ namespace FrameworkApp
 
             dappersw.Start();
 
-            DapperDAL.InsertData(SeedId, Rows);
-            DapperDAL.GetData();
-            DapperDAL.DeleteData();
+            for (int i = 0; i < Repeats; i++)
+            {
+                DapperDAL.InsertData(SeedId, Rows);
+                DapperDAL.GetData();
+                DapperDAL.DeleteData();
+            }
 
             dappersw.Stop();
 
@@ -53,9 +61,12 @@ namespace FrameworkApp
 
             efsw.Start();
 
-            EntityFrameworkDAL.InsertData(SeedId, Rows);
-            EntityFrameworkDAL.GetData();
-            EntityFrameworkDAL.DeleteData();
+            for (int i = 0; i < Repeats; i++)
+            {
+                EntityFrameworkDAL.InsertData(SeedId, Rows);
+                EntityFrameworkDAL.GetData();
+                EntityFrameworkDAL.DeleteData();
+            }
 
             efsw.Stop();
 

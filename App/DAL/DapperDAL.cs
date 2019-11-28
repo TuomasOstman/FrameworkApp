@@ -31,9 +31,19 @@ namespace FrameworkApp
                 var result = false;
                 var seed = 0;
 
-                using (var conn = new SqlConnection(ConnectionString))
-                {
-                    seed = conn.Query<int>("SELECT SeedValue FROM Seed WHERE SeedID = @ID", new { ID = seedID }).FirstOrDefault();
+                using (var conn = new SqlConnection(ConnectionString)) 
+                { 
+                    try 
+                    {
+                       seed = conn.Query<int>("SELECT SeedValue FROM Seed WHERE SeedID = @ID", new { ID = seedID }).FirstOrDefault();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error when fetching Seed!");
+                        throw ex;
+                    }
+
+                    Console.WriteLine("--Seed is : " + seed);
 
                     var gen = new Random(seed);
 

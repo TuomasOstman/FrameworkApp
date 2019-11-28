@@ -33,19 +33,29 @@ namespace FrameworkApp
 
                 using (var conn = new SqlConnection(ConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand("SELECT SeedValue FROM Seed WHERE SeedID = @ID", conn))
+                    try
                     {
-                        cmd.Parameters.Add("@ID", SqlDbType.Int).Value = seedID;
-
-                        conn.Open();
-                        SqlDataReader reader = cmd.ExecuteReader();
-
-                        while (reader.Read())
+                        using (SqlCommand cmd = new SqlCommand("SELECT SeedValue FROM Seed WHERE SeedID = @ID", conn))
                         {
-                            seed = (int)reader["SeedValue"];
+                            cmd.Parameters.Add("@ID", SqlDbType.Int).Value = seedID;
+
+                            conn.Open();
+                            SqlDataReader reader = cmd.ExecuteReader();
+
+                            while (reader.Read())
+                            {
+                                seed = (int)reader["SeedValue"];
+                            }
+                            conn.Close();
                         }
-                        conn.Close();
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error when fetching Seed!");
+                        throw ex;
+                    }
+
+                    Console.WriteLine("--Seed is : " + seed);
 
                     var gen = new Random(seed);
                     var i = 0;
