@@ -12,6 +12,6 @@ namespace FrameworkApp.Model
 
         public int RandomInt;
 
-        public int RandomSeedId;
+        public int SeedId;
     }
 }

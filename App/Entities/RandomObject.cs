@@ -17,7 +17,7 @@ namespace FrameworkApp.Entities
         public int RandomObjectID { get; set; }
         public string RandomString { get; set; }
         public System.DateTimeOffset RandomDateTimeOffset { get; set; }
-        public int RandomSeedId { get; set; }
+        public int SeedId { get; set; }
         public int RandomInt { get; set; }
     
         public virtual Seed Seed { get; set; }

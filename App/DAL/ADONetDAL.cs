@@ -62,14 +62,14 @@ namespace FrameworkApp
 
                     while (i < rows)
                     {
-                        using (SqlCommand cmd = new SqlCommand(@"INSERT INTO RandomObject([RandomObjectID], [RandomString], [RandomDateTimeOffset], [RandomInt], [RandomSeedId]) 
-                                                             Values(@RandomObjectID, @RandomString, @RandomDateTimeOffset, @RandomInt, @RandomSeedId)", conn))
+                        using (SqlCommand cmd = new SqlCommand(@"INSERT INTO RandomObject([RandomObjectID], [RandomString], [RandomDateTimeOffset], [RandomInt], [SeedId]) 
+                                                             Values(@RandomObjectID, @RandomString, @RandomDateTimeOffset, @RandomInt, @SeedId)", conn))
                         {
                             cmd.Parameters.Add("@RandomObjectID", SqlDbType.Int).Value = i;
                             cmd.Parameters.Add("@RandomString", SqlDbType.NVarChar).Value = RandomStringGenerator.RandomString(gen, 15);
                             cmd.Parameters.Add("@RandomDateTimeOffset", SqlDbType.DateTimeOffset).Value = RandomDateTimeOffsetGenerator.RandomDateTimeOffset(gen);
                             cmd.Parameters.Add("@RandomInt", SqlDbType.Int).Value = gen.Next();
-                            cmd.Parameters.Add("@RandomSeedId", SqlDbType.Int).Value = seedID;
+                            cmd.Parameters.Add("@SeedId", SqlDbType.Int).Value = seedID;
 
                             conn.Open();
                             cmd.ExecuteNonQuery();
@@ -111,7 +111,7 @@ namespace FrameworkApp
 
                 using (var conn = new SqlConnection(ConnectionString))
                 {
-                    using (SqlCommand cmd = new SqlCommand(@"SELECT TOP(1) RandomObjectID, RandomString, RandomDateTimeOffset, RandomInt, RandomSeedId
+                    using (SqlCommand cmd = new SqlCommand(@"SELECT TOP(1) RandomObjectID, RandomString, RandomDateTimeOffset, RandomInt, SeedId
                                                              FROM RandomObject 
                                                              ORDER BY RandomDateTimeOffset DESC", conn))
                     {
@@ -126,7 +126,7 @@ namespace FrameworkApp
                                 RandomString = (string)reader["RandomString"],
                                 RandomDateTimeOffset = (DateTimeOffset)reader["RandomDateTimeOffset"],
                                 RandomInt = (int)reader["RandomInt"],
-                                RandomSeedId = (int)reader["RandomSeedId"]
+                                SeedId = (int)reader["SeedId"]
                             };
                         }
                         conn.Close();
@@ -135,7 +135,7 @@ namespace FrameworkApp
 
                 sw.Stop();
 
-                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.RandomSeedId);
+                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.SeedId);
                 Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
             }
             catch (Exception ex)

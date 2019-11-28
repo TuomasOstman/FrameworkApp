@@ -19,7 +19,7 @@
           <Property Name="RandomObjectID" Type="int" Nullable="false" />
           <Property Name="RandomString" Type="nvarchar(max)" Nullable="false" />
           <Property Name="RandomDateTimeOffset" Type="datetimeoffset" Precision="7" Nullable="false" />
-          <Property Name="RandomSeedId" Type="int" Nullable="false" />
+          <Property Name="SeedId" Type="int" Nullable="false" />
           <Property Name="RandomInt" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Seed">
@@ -44,7 +44,7 @@
               <PropertyRef Name="SeedID" />
             </Principal>
             <Dependent Role="RandomObject">
-              <PropertyRef Name="RandomSeedId" />
+              <PropertyRef Name="SeedId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -93,7 +93,7 @@
           <Property Name="RandomObjectID" Type="Int32" Nullable="false" />
           <Property Name="RandomString" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RandomDateTimeOffset" Type="DateTimeOffset" Nullable="false" Precision="7" />
-          <Property Name="RandomSeedId" Type="Int32" Nullable="false" />
+          <Property Name="SeedId" Type="Int32" Nullable="false" />
           <Property Name="RandomInt" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Seed" Relationship="ThesisModel.FK_RandomObject_Seed" FromRole="RandomObject" ToRole="Seed" />
         </EntityType>
@@ -113,7 +113,7 @@
               <PropertyRef Name="SeedID" />
             </Principal>
             <Dependent Role="RandomObject">
-              <PropertyRef Name="RandomSeedId" />
+              <PropertyRef Name="SeedId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -143,7 +143,7 @@
             <EntityTypeMapping TypeName="ThesisModel.RandomObject">
               <MappingFragment StoreEntitySet="RandomObject">
                 <ScalarProperty Name="RandomInt" ColumnName="RandomInt" />
-                <ScalarProperty Name="RandomSeedId" ColumnName="RandomSeedId" />
+                <ScalarProperty Name="SeedId" ColumnName="SeedId" />
                 <ScalarProperty Name="RandomDateTimeOffset" ColumnName="RandomDateTimeOffset" />
                 <ScalarProperty Name="RandomString" ColumnName="RandomString" />
                 <ScalarProperty Name="RandomObjectID" ColumnName="RandomObjectID" />

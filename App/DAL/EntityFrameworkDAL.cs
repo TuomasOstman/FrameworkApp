@@ -46,7 +46,7 @@ namespace FrameworkApp
                             RandomString = RandomStringGenerator.RandomString(gen, 15),
                             RandomDateTimeOffset = RandomDateTimeOffsetGenerator.RandomDateTimeOffset(gen),
                             RandomInt = gen.Next(),
-                            RandomSeedId = seedID
+                            SeedId = seedID
                         };
 
                         db.RandomObject.Add(row);
@@ -98,13 +98,13 @@ namespace FrameworkApp
                                   RandomString = ro.RandomString,
                                   RandomDateTimeOffset = ro.RandomDateTimeOffset,
                                   RandomInt = ro.RandomInt,
-                                  RandomSeedId = ro.RandomSeedId
+                                  SeedId = ro.SeedId
                               }).FirstOrDefault();
                 }
 
                 sw.Stop();
 
-                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.RandomSeedId);
+                Console.WriteLine("--Result was: " + result.RandomObjectID + ", " + result.RandomString + ", " + result.RandomDateTimeOffset + ", " + result.RandomInt + ", " + result.SeedId);
                 Console.WriteLine("--Time Elapsed: " + sw.Elapsed + "\n");
             }
             catch (Exception ex)
